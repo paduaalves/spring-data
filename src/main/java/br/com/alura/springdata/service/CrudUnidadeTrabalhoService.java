@@ -4,22 +4,22 @@ import java.util.Scanner;
 
 import org.springframework.stereotype.Service;
 
-import br.com.alura.springdata.orm.Cargo;
-import br.com.alura.springdata.repository.CargoRepository;
+import br.com.alura.springdata.orm.UnidadeTrabalho;
+import br.com.alura.springdata.repository.UnidadeTrabalhoRepository;
 
 @Service
-public class CrudCargoService {
-    private final CargoRepository cargoRepository;
+public class CrudUnidadeTrabalhoService {
+    private final UnidadeTrabalhoRepository unidadetrabalhoRepository;
 
-    public CrudCargoService(CargoRepository cargoRepository) {
-        this.cargoRepository = cargoRepository;
+    public CrudUnidadeTrabalhoService(UnidadeTrabalhoRepository unidadetrabalhoRepository) {
+        this.unidadetrabalhoRepository = unidadetrabalhoRepository;
     }
 
     private boolean system = true;
 
     public void inicial(Scanner scanner) {
         while (system) {
-            System.out.println("Qual ação de Cargo deseja executar?");
+            System.out.println("Qual ação de Unidade Trabalho deseja executar?");
             System.out.println("0 - Sair");
             System.out.println("1 - Salvar");
             System.out.println("2 - Atualizar");
@@ -50,8 +50,7 @@ public class CrudCargoService {
 
     public void listarTodos() {
         System.out.println("-------------------------------");
-        cargoRepository.findAll().iterator().forEachRemaining(System.out::println);
-    //    cargoRepository.listarIdDescricaoCargos().forEach(System.out::println);
+        unidadetrabalhoRepository.findAll().iterator().forEachRemaining(System.out::println);
         System.out.println("-------------------------------");
     }
 
@@ -62,10 +61,13 @@ public class CrudCargoService {
         Integer id = scanner.nextInt();
         System.out.println("Informe a nova descricao:");
         String novaDescricao = scanner.next();
-        Cargo cargo = new Cargo();
-        cargo.setId(id);
-        cargo.setDescricao(novaDescricao);
-        cargoRepository.save(cargo);
+        System.out.println("Informe o Endereço da Unidade: ");
+        String endereco = scanner.next();
+        UnidadeTrabalho unidadeTrabalho = new UnidadeTrabalho();
+        unidadeTrabalho.setId(id);
+        unidadeTrabalho.setDescricao(novaDescricao);
+        unidadeTrabalho.setEndereco(endereco);
+        unidadetrabalhoRepository.save(unidadeTrabalho);
         listarTodos();
 
     }
@@ -74,19 +76,20 @@ public class CrudCargoService {
         listarTodos();
         System.out.println("Informe o ID que deseja remover:");
         Integer id = scanner.nextInt();
-        Cargo cargo = cargoRepository.findById(id).get();
-        cargoRepository.delete(cargo);
+        unidadetrabalhoRepository.deleteById(id);
         listarTodos();
-
     }
 
     private void salvar(Scanner scanner) {
-        System.out.println("Descrição do Cargo");
+        scanner.useDelimiter("\n");
+        System.out.println("Informe a Descrição do Unidade: ");
         String descricao = scanner.next();
-        Cargo cargo = new Cargo(descricao);
-        cargo.setDescricao(descricao);
-        cargoRepository.save(cargo);
+        System.out.println("Informe o Endereço da Unidade: ");
+        String endereco = scanner.next();
+        UnidadeTrabalho unidadeTrabalho = new UnidadeTrabalho(descricao, endereco);
+        unidadeTrabalho.setDescricao(descricao);
+        unidadetrabalhoRepository.save(unidadeTrabalho);
         System.out.println("Salvo");
-        listarTodos();
+
     }
 }
